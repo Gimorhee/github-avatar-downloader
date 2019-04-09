@@ -1,6 +1,12 @@
 var request = require('request');
 var secret = require('./secrets.js');
 var fs = require('fs');
+var args = process.argv;
+var repoOnwer = args[2];
+var repoName = args[3];
+
+console.log(repoOnwer);
+console.log(repoName);
 
 function getRepoContributors(repoOwner, repoName, cb) {
   var options = {
@@ -12,7 +18,7 @@ function getRepoContributors(repoOwner, repoName, cb) {
   };
 
   request(options, function(err, res, body) {
-    cb(err,JSON.parse(body));
+    cb(err, JSON.parse(body));
   });
 }
 
@@ -22,7 +28,7 @@ function downloadImageByURL(url, filePath) {
        .on('error', function(err){
          console.log(err);
        })
-       .on('response', function (response) {                           // Note 3
+       .on('response', function (response) {
          console.log('Response Status Code: ', response.statusCode);
        })
        .on('end',function (response) {
@@ -31,10 +37,10 @@ function downloadImageByURL(url, filePath) {
        .pipe(fs.createWriteStream(filePath));
 }
 
-getRepoContributors("jquery", "jquery", function(err, result) {
+getRepoContributors(repoOnwer, repoName, function(err, result) {
   // console.log("Errors:", err);
   // console.log("Result:", result);
-  result.forEach(function(element){
+  result.forEach(function(element) {
     //console.log(element.avatar_url);
     var filePath = "./avatar/" + element.id + ".jpg";
     //console.log(filePath);
